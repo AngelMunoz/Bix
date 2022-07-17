@@ -19,7 +19,7 @@ Examples of runtimes that work with this model:
   - [Cloudflare Workers] -> (Under Investigation)
 
 
-> the "**_Bix_** name is just a _codename_ for now (until I decide it's good to go).
+> the "**_Bix_**" name is just a _codename_ for now (until I decide it's good to go).
 
 This microframework is heavily inspired by [Giraffe], and [Saturn] frameworks from F# land so if you have ever used that server model then Bix will feel fairly similar, I plan to add a saturn like router eventually
 
