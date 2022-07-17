@@ -1,0 +1,33 @@
+<Project>
+    <PropertyGroup>
+        <PackageProjectUrl>https://github.com/AngelMunoz/fable-bun</PackageProjectUrl>
+        <RepositoryUrl>https://github.com/AngelMunoz/fable-bun.git</RepositoryUrl>
+        <PackageLicenseFile>LICENSE</PackageLicenseFile>
+        <PackageReadmeFile>README.md</PackageReadmeFile>
+        <PackageTags>fsharp;fable;javascript;f#;js;deno;bun;</PackageTags>
+        <Authors>Angel Daniel Munoz Gonzalez</Authors>
+        <GenerateDocumentationFile>true</GenerateDocumentationFile>
+
+        <!-- For SourceLink. See: https://github.com/dotnet/sourcelink#using-source-link-in-net-projects -->
+        <PublishRepositoryUrl>true</PublishRepositoryUrl>
+        <EmbedUntrackedSources>true</EmbedUntrackedSources>
+        <IncludeSymbols>true</IncludeSymbols>
+        <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+    </PropertyGroup>
+    <ItemGroup>
+        <None Include="$(MSBuildThisFileDirectory)\..\LICENSE" Pack="true" Visible="false" PackagePath=""/>
+        <None Include="$(MSBuildThisFileDirectory)\..\README.md" Pack="true" Visible="false" PackagePath=""/>
+    </ItemGroup>
+    <ItemGroup>
+        <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0" PrivateAssets="All" />
+    </ItemGroup>
+    <PropertyGroup>
+        <FableBrowserBlob>1.2.0</FableBrowserBlob>
+        <FableBrowserWebSocket>1.2.0</FableBrowserWebSocket>
+        <FableBrowserEvent>1.5.0</FableBrowserEvent>
+        <FableBrowserUrl>1.1.0</FableBrowserUrl>
+        <FableFetch>2.6.0</FableFetch>
+        <FableCore>3.7.1</FableCore>
+        <FableURLPattern>1.0.0</FableURLPattern>
+  </PropertyGroup>
+</Project>

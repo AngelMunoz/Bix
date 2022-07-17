@@ -1,0 +1,27 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <Version>1.0.0-beta-001</Version>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="Types.fs" />
+    <Compile Include="Extensions.fs" />
+    <Compile Include="Handlers.fs" />
+    <Compile Include="Bix.fs" />
+    <Compile Include="Router.fs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="*.fsproj; *.fs;" PackagePath="fable\" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Fable.Browser.Blob" Version="$(FableBrowserBlob)" />
+    <PackageReference Include="Fable.Browser.Event" Version="$(FableBrowserEvent)" />
+    <PackageReference Include="Fable.Browser.Url" Version="$(FableBrowserUrl)" />
+    <PackageReference Include="Fable.Browser.WebSocket" Version="$(FableBrowserWebSocket)" />
+    <PackageReference Include="Fable.Fetch" Version="$(FableFetch)" />
+    <PackageReference Include="Fable.Core" Version="$(FableCore)" />
+    <PackageReference Include="Fable.URLPattern" Version="$(FableURLPattern)" />
+  </ItemGroup>
+
+</Project>
