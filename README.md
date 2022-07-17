@@ -103,7 +103,7 @@ After installing .NET + Bun just run
 
 ### Deno
 
-After installing .NET + Bun just run
+After installing .NET + Deno just run
 
 ```sh
 dotnet tool restore
