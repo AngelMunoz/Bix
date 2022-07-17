@@ -12,13 +12,13 @@
 
 Bix.Bun exposes a [bun.sh] specific request handler, and other http handlers that may contain Bun specific APIs like `Bun.file` to read files
 
-Check the sample at `src/Bix.Bun.Sample/Program.fs`
+Check the sample at `samples/Bix.Bun.Sample/Program.fs`
 
 ## Bix.Deno
 
 Bix.Deno exposes a [deno] specific request handler, and other http handlers that may contain Bun specific APIs like `Deno.open` to read files
 
-Check the sample at `src/Bix.Deno.Sample/Program.fs`
+Check the sample at `samples/Bix.Deno.Sample/Program.fs`
 
 ```fsharp
 // For more information see https://aka.ms/fsharp-console-apps
@@ -69,8 +69,7 @@ Server.Empty
 > ```json
 > {
 >   "imports": {
->     "urlpattern-polyfill": "https://cdn.skypack.dev/pin/urlpattern-polyfill@v5.0.3-5dMKTgPBkStj8a3hiMD2/mode=imports,min/optimized/urlpattern-polyfill.js",
->     "http": "https://deno.land/std@0.147.0/http/server.ts"
+>     "fable-deno-http": "https://deno.land/std/http/mod.ts"
 >   }
 > }
 > ```
@@ -107,6 +106,6 @@ After installing .NET + Bun just run
 After installing .NET + Bun just run
 
 ```sh
-dotnet tool restore && \
-dotnet fable watch src/Bix.Deno.Sample -s -o dist/Bix.Deno.Sample --run deno run -A ./dist/Bix.Deno.Sample/Program.js`
+dotnet tool restore
+dotnet fable watch samples/Bix.Deno.Sample -s && --run deno run -A --watch=./samples/Bix.Deno.Sample/ ./samples/Bix.Deno.Sample/Program.fs.js`
 ```
