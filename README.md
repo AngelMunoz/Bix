@@ -3,10 +3,25 @@
 [giraffe]: https://giraffe.wiki
 [saturn]: https://github.com/SaturnFramework/Saturn
 [fable]: https://fable.io
+[fable.bun]: https://github.com/AngelMunoz/fable-bun
+[fable.deno]: https://github.com/AngelMunoz/fable-deno
+[Cloudflare Workers]: https://developers.cloudflare.com/workers/
 
 ## Bix
 
-**Bix** which can be found in `src/Bix` is an F# microframework built on top of `Bun.serve` although the name is just a _codename_ for now (until I decide it's good to go), this microframework is heavily inspired by [Giraffe], and [Saturn] frameworks from F# land so if you have ever used that server model then Bix will feel fairly similar, I plan to add a saturn like router eventually
+An F# microframework that provides a router and http handler abstractions for web frameworks that work with a Request -> Response model.
+
+Examples of runtimes that work with this model:
+
+- [Bun.sh] -> [Fable.Bun] + Bix.Bun
+- [Deno] -> [Fable.Deno] + Bix.Deno
+- Service Workers -> (Adapter and Investigation in progress)
+  - [Cloudflare Workers] -> (Under Investigation)
+
+
+> the "**_Bix_** name is just a _codename_ for now (until I decide it's good to go).
+
+This microframework is heavily inspired by [Giraffe], and [Saturn] frameworks from F# land so if you have ever used that server model then Bix will feel fairly similar, I plan to add a saturn like router eventually
 
 ## Bix.Bun
 
