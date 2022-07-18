@@ -1,3 +1,5 @@
+#!/usr/bin/env -S dotnet fsi
+
 #r "nuget: Fake.DotNet.Cli, 5.22.0"
 #r "nuget: Fake.IO.FileSystem, 5.22.0"
 #r "nuget: Fake.Core.Target, 5.22.0"
@@ -40,31 +42,6 @@ let fsharpSourceFiles =
 Target.initEnvironment ()
 Target.create "Clean" (fun _ -> !! "nugets" |> Shell.cleanDirs)
 
-Target.create "Format" (fun _ ->
-    let result =
-        fsharpSourceFiles
-        |> Seq.map (sprintf "\"%s\"")
-        |> String.concat " "
-        |> DotNet.exec id "fantomas"
-
-    if not result.OK then
-        printfn $"Errors while formatting all files: %A{result.Messages}")
-
-Target.create "CheckFormat" (fun _ ->
-    let result =
-        fsharpSourceFiles
-        |> Seq.map (sprintf "\"%s\"")
-        |> String.concat " "
-        |> sprintf "%s --check"
-        |> DotNet.exec id "fantomas"
-
-    if result.ExitCode = 0 then
-        Trace.log "No files need formatting"
-    elif result.ExitCode = 99 then
-        failwith "Some files need formatting, check output for more info"
-    else
-        Trace.logf $"Errors while formatting: %A{result.Errors}")
-
 Target.create "PackNugets" (fun _ ->
     projects
     |> Array.iter (fun project ->
@@ -76,14 +53,10 @@ Target.create "PackNugets" (fun _ ->
 
             $"src/{project}"))
 
-Target.create "Zip" (fun _ ->
-    projects
-    |> Array.Parallel.iter (fun project -> ZipFile.CreateFromDirectory($"{output}/{project}", $"{output}/{project}.zip")))
 
-Target.create "Default" (fun _ -> Target.runSimple "Zip" [] |> ignore)
+Target.create "Default" (fun _ -> Target.runSimple "PackNugets" [] |> ignore)
 
 "Clean"
-==> "CheckFormat"
 ==> "PackNugets"
 ==> "Default"
 

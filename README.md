@@ -5,11 +5,13 @@
 [fable]: https://fable.io
 [fable.bun]: https://github.com/AngelMunoz/fable-bun
 [fable.deno]: https://github.com/AngelMunoz/fable-deno
-[Cloudflare Workers]: https://developers.cloudflare.com/workers/
+[cloudflare workers]: https://developers.cloudflare.com/workers/
 
-## Bix
+# Bix
 
-An F# microframework that provides a router and http handler abstractions for web frameworks that work with a Request -> Response model.
+> the "**_Bix_**" name is just a _codename_ for now (until I decide it's good to go).
+
+An F# microframework that provides a router and http handler abstractions for web frameworks that work with a `Request -> Response` http server model.
 
 Examples of runtimes that work with this model:
 
@@ -18,78 +20,59 @@ Examples of runtimes that work with this model:
 - Service Workers -> (Adapter and Investigation in progress)
   - [Cloudflare Workers] -> (Under Investigation)
 
+This microframework is heavily inspired by [Giraffe], and [Saturn] frameworks from F# land so if you have ever used that server model then Bix will feel fairly similar.
 
-> the "**_Bix_**" name is just a _codename_ for now (until I decide it's good to go).
-
-This microframework is heavily inspired by [Giraffe], and [Saturn] frameworks from F# land so if you have ever used that server model then Bix will feel fairly similar, I plan to add a saturn like router eventually
-
-## Bix.Bun
-
-Bix.Bun exposes a [bun.sh] specific request handler, and other http handlers that may contain Bun specific APIs like `Bun.file` to read files
-
-Check the sample at `samples/Bix.Bun.Sample/Program.fs`
-
-## Bix.Deno
-
-Bix.Deno exposes a [deno] specific request handler, and other http handlers that may contain Bun specific APIs like `Deno.open` to read files
-
-Check the sample at `samples/Bix.Deno.Sample/Program.fs`
+An hypotetical example could be like the following code:
 
 ```fsharp
-// For more information see https://aka.ms/fsharp-console-apps
-open Bix
-open Bix.Types
-open Bix.Handlers
-open Bix.Router
+// define a function that takes HttpHandlers to satisfy existing handler constrains
+let authenticateOrRedirect (authenticatedRoute: HttpHandler, notAuthenticatedRoute: HttpHandler) =
+    Handlers.authenticateUser
+        authenticatedRoute
+        notAuthenticatedRoute
 
-open Bix.Deno
+// compose different handlers for code reusability
+// and granular control of handler execution
+let checkAdminCredentials successRoute =
+    authenticateOrRedirect (successRoute, Admin.Login)
+    >=> Handlers.requiresAdmin
 
-let checkCredentials: HttpHandler =
-    fun next ctx ->
-        let req: Request = ctx.Request
-        let bearer = req.headers.get "Authorization" |> Option.ofObj
-        // dummy handler
-        match bearer with
-        | None -> (setStatusCode (401) >=> sendText "Not Authorized") next ctx
-        | Some token -> next ctx
+let checkUserCredentials successRoute =
+    authenticateOrRedirect (successRoute, Views.Login)
+    >=> Handlers.requiresUserOrAbove
 
+// define routes for this application
 let routes =
     Router.Empty
-    |> Router.get ("/", fun next ctx -> sendText "Hello, World!" next ctx)
-    |> Router.get ("/posts/:slug", fun next ctx ->
-        promise { // promise based handlers are supported
-            let slug = ctx.PathParams "slug"
-            let! post = Database.find slug // database from somewhere
-            let! html = Views.renderPost post // views from somewhere
-            return! sendHtml html next ctx
-        }
-    )
-    |> Router.get ("/json", fun next ctx ->
-        let content = {| name = "Bix Server!"; Date = System.DateTime.Now |}
-        sendJson content next ctx
-    )
-    |> Router.get ("/protected", (checkCredentials >=> (fun next ctx -> sendText "I'm protected!" next ctx)))
+    |> Router.get("/", authenticateOrRedirect >=> Views.Landing)
+    |> Router.get ("/login", authenticateOrRedirect >=> Views.Login)
+    |> Router.get ("/me", checkUserCredentials(Views.Login))
+    |> Router.get ("/portal", checkUserCredentials(Views.Portal))
+    |> Router.get ("/admin", checkAdminCredentials(Admin.Portal))
+    |> Router.post ("/users", checkAdminCredentials(Api.Users.Create >=> negotiateContent))
+    |> Router.patch ("/users/:id", checkAdminCredentials(Api.Users.Update >=> negotiateContent))
 
-
+// Start the web server
 Server.Empty
-|> Server.withRouter routes
-|> Server.withDevelopment true
 |> Server.withPort 5000
+|> Server.withDevelopment true
+|> Server.withRouter routes
 |> Server.run
-|> Promise.start
 ```
 
-> **Note**: When Working with deno, you need to have the following fields in your import map
->
-> ```json
-> {
->   "imports": {
->     "fable-deno-http": "https://deno.land/std/http/mod.ts"
->   }
-> }
-> ```
+The idea is to create simple and single purposed functions that work like middleware so you can organize and re-use
 
-This is to ensure bare imports within `Bix.Browser.Types` and `Bix.Deno` work just fine.
+## Adapters
+
+Bix currently has two adapters
+
+- Bix.Deno
+- Bix.Bun
+
+Adapters under investigation:
+
+- Bix.ServiceWorker
+- Bix.CloudflareWorker
 
 # Development
 
@@ -101,26 +84,13 @@ This project is developed with VSCode in Linux/Windows/WSL but either rider, and
 - Bun - [bun.sh] - (in case of running bun)
 - Deno - [deno] - (in case of running deno)
 
-## Try the sample
+## Try the samples
 
-if you have bun installed along deno the simplest way to run the samples is
+Depending on what you want to try change the directory to your selected sample, example: `cd samples/Bix.Bun.Sample` and run one of the following commands
 
-- `bun start`
-- `bun start:deno`
+1. `dotnet tool restore` (run once per clone)
+2. start the project
+   - `bun start`
+   - `deno task start`
 
-both commands will restore the projects and run fable, bun/deno in watch mode
-
-### Bun
-
-After installing .NET + Bun just run
-
-`bun start` on your terminal and it should just work
-
-### Deno
-
-After installing .NET + Deno just run
-
-```sh
-dotnet tool restore
-dotnet fable watch samples/Bix.Deno.Sample -s && --run deno run -A --watch=./samples/Bix.Deno.Sample/ ./samples/Bix.Deno.Sample/Program.fs.js`
-```
+both commands will restore the projects and run fable, bun/deno in watch mode.

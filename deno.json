@@ -1,6 +1,0 @@
-{
-  "tasks": {
-    "start": "deno run -A --watch=dist/ ./dist/Fable.Bun.Sample/Program.js"
-  },
-  "importMap": "./import_map.json"
-}

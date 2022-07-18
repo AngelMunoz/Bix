@@ -18,12 +18,12 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Bix\Bix.fsproj" />
-    <ProjectReference Include="..\Fable.Bun\Fable.Bun.fsproj" />
   </ItemGroup>
   
   <ItemGroup>
     <PackageReference Include="Fable.Core" Version="$(FableCore)" />
     <PackageReference Include="Fable.URLPattern" Version="$(FableURLPattern)" />
+    <PackageReference Include="Fable.Bun" Version="0.1.0" />
   </ItemGroup>
 
 </Project>
