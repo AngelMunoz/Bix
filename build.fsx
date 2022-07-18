@@ -5,11 +5,9 @@
 #r "nuget: Fake.Core.Target, 5.22.0"
 #r "nuget: Fake.DotNet.MsBuild, 5.22.0"
 #r "nuget: MSBuild.StructuredLogger, 2.1.630"
-#r "nuget: System.IO.Compression.ZipFile, 4.3.0"
 #r "nuget: System.Reactive, 5.0.0"
 
 open System
-open System.IO.Compression
 open Fake.Core
 open Fake.DotNet
 open Fake.IO
@@ -29,15 +27,8 @@ let output = "./nugets"
 let projects =
     [| "Bix"
        "Bix.Bun"
-       "Bix.Deno" |]
-
-let fsharpSourceFiles =
-    !! "src/**/*.fs"
-    ++ "src/**/*.fsi"
-    ++ "src/**/*.fsx"
-    ++ "build.fsx"
-    -- "**/obj/**/*.fs"
-    -- "**/fable_modules/**/*.fs"
+       "Bix.Deno"
+       "Bix.Cloudflare" |]
 
 Target.initEnvironment ()
 Target.create "Clean" (fun _ -> !! "nugets" |> Shell.cleanDirs)
