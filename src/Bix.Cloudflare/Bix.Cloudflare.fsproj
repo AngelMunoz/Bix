@@ -1,0 +1,27 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <Version>1.0.0-beta-001</Version>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="Worker.fs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="*.fsproj; *.fs;" PackagePath="fable\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Bix\Bix.fsproj" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <PackageReference Include="Fable.Core" Version="$(FableCore)" />
+    <PackageReference Include="Fable.Fetch" Version="$(FableFetch)" />
+    <PackageReference Include="Fable.Browser.Event" Version="$(FableBrowserEvent)" />
+  </ItemGroup>
+
+</Project>

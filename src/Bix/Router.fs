@@ -3,9 +3,9 @@ module Bix.Router
 open URLPattern
 open Bix.Types
 
-let Empty = List.empty
-
 type Router =
+
+    static member inline Empty: list<RouteDefinition> = List.empty
     static member inline get
         (path: string, handler: HttpHandler)
         (routes: RouteDefinition list)
