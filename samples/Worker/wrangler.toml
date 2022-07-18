@@ -1,0 +1,3 @@
+name = "w-sample"
+main = "src/Worker.fs.js"
+compatibility_date = "2022-07-18"
