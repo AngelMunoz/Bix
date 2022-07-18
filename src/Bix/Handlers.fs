@@ -31,35 +31,24 @@ let sendHtml (value: string) : HttpHandler =
 
 let setContentType (contentType: string) : HttpHandler =
     fun next ctx ->
-        let headers = ctx.Response.Headers
-        headers.append ("content-type", contentType)
+        ctx.Response.Headers.append ("content-type", contentType)
+        let headers = ctx.Response.Headers :?> seq<string * string> |> Array.ofSeq
 
-        let res =
+        ctx.SetResponse(
             Response.create (
                 "",
-                unbox
-                    {| headers = headers
-                       status = ctx.Response.Status
-                       statusText = ctx.Response.StatusText |}
+                [ Headers headers
+                  Status ctx.Response.Status
+                  StatusText ctx.Response.StatusText ]
             )
+        )
 
-        ctx.SetResponse(res)
         next ctx
 
 let setStatusCode (code: int) : HttpHandler =
     fun next ctx ->
-        let headers = ctx.Response.Headers
-
-        let res =
-            Response.create (
-                "",
-                unbox
-                    {| headers = headers
-                       status = code
-                       statusText = ctx.Response.StatusText |}
-            )
-
-        ctx.SetResponse(res)
+        let headers = ctx.Response.Headers :?> seq<string * string> |> Array.ofSeq
+        ctx.SetResponse(Response.create ("", [ Headers headers; Status code; StatusText ctx.Response.StatusText ]))
         next ctx
 
 let notFoundHandler: HttpHandler =
@@ -114,42 +103,22 @@ let tryDecodeJson<'T>
 module BixResponse =
 
     let NoValue (contentType: string, options: ResponseInitProperties list) =
-        Response.create (
-            "",
-            Headers [| "content-type", contentType |]
-            :: options
-        )
+        Response.create ("", Headers [| "content-type", contentType |] :: options)
 
     let OnText (text: string, options: ResponseInitProperties list) =
-        Response.create (
-            text,
-            Headers [| "content-type", "text/plain" |]
-            :: options
-        )
+        Response.create (text, Headers [| "content-type", "text/plain" |] :: options)
 
     let OnHtml (html: string, options: ResponseInitProperties list) =
-        Response.create (
-            html,
-            Headers [| "content-type", "text/html" |]
-            :: options
-        )
+        Response.create (html, Headers [| "content-type", "text/html" |] :: options)
 
     let OnJson (json: obj, options: ResponseInitProperties list) =
         let content = JS.JSON.stringify (json)
 
-        Response.create (
-            content,
-            Headers [| "content-type", "application/json" |]
-            :: options
-        )
+        Response.create (content, Headers [| "content-type", "application/json" |] :: options)
 
     let OnJsonOptions (value: obj, encoder: obj -> string, options: ResponseInitProperties list) =
 
-        Response.create (
-            encoder value,
-            Headers [| "content-type", "application/json" |]
-            :: options
-        )
+        Response.create (encoder value, Headers [| "content-type", "application/json" |] :: options)
 
     let OnBlob (blob: Blob, mimeType: string, options: ResponseInitProperties list) =
         Response.create (blob, Headers [| "content-type", mimeType |] :: options)
