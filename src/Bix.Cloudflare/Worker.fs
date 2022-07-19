@@ -26,7 +26,7 @@ type BixWorkerArgs = Fetch of response: (Request -> JS.Promise<Response>)
 type WorkerServer(url: URL) =
     interface IHostServer with
         override _.hostname: string option = url.origin |> Option.ofObj
-        override _.port: int = 0
+        override _.port: int = url.port |> int
         override _.development: bool = false
         override _.env: Map<string, string> = Map.empty
 
