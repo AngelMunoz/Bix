@@ -17,8 +17,9 @@ Examples of runtimes that work with this model:
 
 - [Bun.sh] -> [Fable.Bun] + Bix.Bun
 - [Deno] -> [Fable.Deno] + Bix.Deno
-- Service Workers -> (Adapter and Investigation in progress)
-  - [Cloudflare Workers] -> (Under Investigation)
+- Service Workers
+  - Browser Service Worker
+  - [Cloudflare Workers] -> Bix.Cloudflare
 
 This microframework is heavily inspired by [Giraffe], and [Saturn] frameworks from F# land so if you have ever used that server model then Bix will feel fairly similar.
 

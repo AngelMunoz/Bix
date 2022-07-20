@@ -3,7 +3,6 @@
 open Fable.Core
 open Browser.Types
 open Bix
-open Bix.Router
 open Bix.Handlers
 open Bix.Types
 open Fetch
@@ -26,7 +25,7 @@ type BixWorkerArgs = Fetch of response: (Request -> JS.Promise<Response>)
 type WorkerServer(url: URL) =
     interface IHostServer with
         override _.hostname: string option = url.origin |> Option.ofObj
-        override _.port: int = 0
+        override _.port: int = url.port |> int
         override _.development: bool = false
         override _.env: Map<string, string> = Map.empty
 
@@ -42,10 +41,24 @@ let BixHandler (routes: RouteDefinition list) (notFound: HttpHandler option) (re
 let Empty = ResizeArray<BixWorkerArgs>()
 
 let withRouter (routes: RouteDefinition list) (args: ResizeArray<BixWorkerArgs>) =
+#if DEBUG
+
+    for route in routes |> List.sortBy (fun r -> unbox<string> r.pattern) do
+        let verb = route.method.asString
+        let pattern = route.pattern
+        printfn $"Registered: {verb} -> {pattern}"
+#endif
     args.Add(Fetch(BixHandler routes None))
     args
 
 let withRouterAndNotFound (routes: RouteDefinition list) (notFound: HttpHandler) (args: ResizeArray<BixWorkerArgs>) =
+#if DEBUG
+
+    for route in routes |> List.sortBy (fun r -> unbox<string> r.pattern) do
+        let verb = route.method.asString
+        let pattern = route.pattern
+        printfn $"Registered: {verb} -> {pattern}"
+#endif
     args.Add(Fetch(BixHandler routes (Some notFound)))
     args
 
