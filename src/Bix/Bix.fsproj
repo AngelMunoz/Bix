@@ -10,6 +10,8 @@
     <Compile Include="Handlers.fs" />
     <Compile Include="Bix.fs" />
     <Compile Include="Router.fs" />
+    <Compile Include="Giraffe.fs" />
+    <Compile Include="Saturn.fs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="*.fsproj; *.fs;" PackagePath="fable\" />

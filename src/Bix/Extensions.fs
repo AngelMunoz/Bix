@@ -3,7 +3,7 @@ module Extensions
 
 open Bix.Types
 
-let compose (h1: HttpHandler) (h2: HttpHandler) : HttpHandler =
+let inline compose (h1: HttpHandler) (h2: HttpHandler) : HttpHandler =
     fun final ->
         let fn = final |> h2 |> h1
 
