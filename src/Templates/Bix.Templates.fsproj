@@ -1,0 +1,27 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <!-- General info -->
+    <Description>dotnet new templates of Bix, feel free to contribute and improve if necessary</Description>
+    <Copyright>Copyright 2020 Angel D. Munoz</Copyright>
+    <Authors>Angel Munoz</Authors>
+
+    <!-- Build config -->
+    <TargetFramework>net6.0</TargetFramework>
+    <IncludeContentInPack>true</IncludeContentInPack>
+    <IncludeBuildOutput>false</IncludeBuildOutput>
+    <ContentTargetFolders>content</ContentTargetFolders>
+
+    <!-- NuGet config -->
+    <PackageType>Template</PackageType>
+    <PackageId>Bix.Templates</PackageId>
+    <PackageVersion>1.0.0-beta-001</PackageVersion>
+    <PackageTags>bix;web;app;dotnet;new;template;F#;fable;deno;bun;cloudflare;worker</PackageTags>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Content Include="templates\**\*" Exclude="templates\**\bin\**;templates\**\obj\**" />
+    <Compile Remove="**\*" />
+  </ItemGroup>
+
+</Project>

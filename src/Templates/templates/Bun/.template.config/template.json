@@ -1,0 +1,21 @@
+{
+  "author": "Angel D. Munoz",
+  "classifications": [
+    "bun",
+    "worker",
+    "fsharp",
+    "fable",
+    "bix"
+  ],
+  "description": "A basic bun server with Bix",
+  "name": "Bun server Application",
+  "identity": "Bix.Templates.Bun",
+  "groupidentity": "Bix.Templates",
+  "shortName": "bix.bun",
+  "tags": {
+    "language": "F#",
+    "type": "project"
+  },
+  "sourceName": "AppName",
+  "preferNameDirectory": "true"
+}

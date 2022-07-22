@@ -1,0 +1,7 @@
+{
+  "tasks": {
+    "restore-tools": "dotnet tool restore",
+    "start": "deno task restore-tools && dotnet fable watch src -s --run deno run -A --watch=./src ./src/Program.fs.js"
+  },
+  "importMap": "./import_map.json"
+}
