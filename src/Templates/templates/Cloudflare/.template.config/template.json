@@ -1,0 +1,21 @@
+{
+  "author": "Angel D. Munoz",
+  "classifications": [
+    "cloudflare",
+    "worker",
+    "fsharp",
+    "fable",
+    "bix"
+  ],
+  "description": "A basic cloudflare worker with Bix",
+  "name": "Cloudflare Bix Worker Application",
+  "identity": "Bix.Templates.Cloudflare",
+  "groupidentity": "Bix.Templates",
+  "shortName": "bix.cloudflare",
+  "tags": {
+    "language": "F#",
+    "type": "project"
+  },
+  "sourceName": "Worker",
+  "preferNameDirectory": "true"
+}

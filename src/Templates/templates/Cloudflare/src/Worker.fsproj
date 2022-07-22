@@ -1,0 +1,18 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="Program.fs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Bix" Version="1.0.0-beta-*" />
+    <PackageReference Include="Bix.CloudFlare" Version="1.0.0-beta-*" />
+    <PackageReference Include="Feliz.ViewEngine" Version="0.24.0" />
+  </ItemGroup>
+
+</Project>

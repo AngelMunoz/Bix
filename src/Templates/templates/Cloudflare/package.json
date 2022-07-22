@@ -1,0 +1,13 @@
+{
+  "name": "Worker",
+  "version": "0.0.0",
+  "devDependencies": {
+    "wrangler": "2.0.22"
+  },
+  "private": true,
+  "scripts": {
+    "prestart": "dotnet tool restore",
+    "start": "dotnet fable watch src -s --run wrangler dev --local",
+    "deploy": "wrangler publish"
+  }
+}
