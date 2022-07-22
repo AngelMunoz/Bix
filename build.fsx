@@ -28,7 +28,8 @@ let projects =
     [| "Bix"
        "Bix.Bun"
        "Bix.Deno"
-       "Bix.Cloudflare" |]
+       "Bix.Cloudflare"
+       "Bix.Templates" |]
 
 Target.initEnvironment ()
 Target.create "Clean" (fun _ -> !! "nugets" |> Shell.cleanDirs)
