@@ -10,7 +10,7 @@
   "description": "A basic cloudflare worker with Bix",
   "name": "Cloudflare Bix Worker Application",
   "identity": "Bix.Templates.Cloudflare",
-  "groupidentity": "Bix.Templates",
+  "groupidentity": "Bix.Templates.Cloudflare",
   "shortName": "bix.cloudflare",
   "tags": {
     "language": "F#",

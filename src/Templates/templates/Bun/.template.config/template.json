@@ -10,7 +10,7 @@
   "description": "A basic bun server with Bix",
   "name": "Bun server Application",
   "identity": "Bix.Templates.Bun",
-  "groupidentity": "Bix.Templates",
+  "groupidentity": "Bix.Templates.Bun",
   "shortName": "bix.bun",
   "tags": {
     "language": "F#",

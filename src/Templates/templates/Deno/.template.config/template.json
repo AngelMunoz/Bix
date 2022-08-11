@@ -9,9 +9,9 @@
   ],
   "description": "A basic cloudflare worker with Bix",
   "name": "Cloudflare Bix Worker Application",
-  "identity": "Bix.Templates.Cloudflare",
-  "groupidentity": "Bix.Templates",
-  "shortName": "bix.cloudflare",
+  "identity": "Bix.Templates.Deno",
+  "groupidentity": "Bix.Templates.Deno",
+  "shortName": "bix.deno",
   "tags": {
     "language": "F#",
     "type": "project"
