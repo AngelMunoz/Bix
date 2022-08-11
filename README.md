@@ -11,6 +11,14 @@
 
 > the "**_Bix_**" name is just a _codename_ for now (until I decide it's good to go).
 
+> ## Templates
+>
+> `dotnet new --install Bix.Templates::*`
+>
+> - `dotnet new bix.bun -o BunProject
+> - `dotnet new bix.cloudflare -o CloudFlareWorker
+> - `dotnet new bix.deno -o DenoProject
+
 An F# microframework that provides a router and http handler abstractions for web frameworks that work with a `Request -> Response` http server model.
 
 Examples of runtimes that work with this model:
@@ -18,8 +26,8 @@ Examples of runtimes that work with this model:
 - [Bun.sh] -> [Fable.Bun] + Bix.Bun
 - [Deno] -> [Fable.Deno] + Bix.Deno
 - Service Workers
-  - Browser Service Worker
   - [Cloudflare Workers] -> Bix.Cloudflare
+  - Browser Service Worker
 
 This microframework is heavily inspired by [Giraffe], and [Saturn] frameworks from F# land so if you have ever used that server model then Bix will feel fairly similar.
 
@@ -44,6 +52,8 @@ let checkUserCredentials successRoute =
 
 // define routes for this application
 let routes =
+    // check the Cloud flare Worker sample/tempalte to see other router options
+    // basic, giraffe, and saturn like
     Router.Empty
     |> Router.get("/", authenticateOrRedirect >=> Views.Landing)
     |> Router.get ("/login", authenticateOrRedirect >=> Views.Login)
