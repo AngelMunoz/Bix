@@ -15,9 +15,9 @@
 >
 > `dotnet new --install Bix.Templates::*`
 >
-> - `dotnet new bix.bun -o BunProject
-> - `dotnet new bix.cloudflare -o CloudFlareWorker
-> - `dotnet new bix.deno -o DenoProject
+> - `dotnet new bix.bun -o BunProject`
+> - `dotnet new bix.cloudflare -o CloudFlareWorker`
+> - `dotnet new bix.deno -o DenoProject`
 
 An F# microframework that provides a router and http handler abstractions for web frameworks that work with a `Request -> Response` http server model.
 
