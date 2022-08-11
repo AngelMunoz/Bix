@@ -29,7 +29,7 @@ let projects =
        "Bix.Bun"
        "Bix.Deno"
        "Bix.Cloudflare"
-       "Bix.Templates" |]
+       "Templates" |]
 
 Target.initEnvironment ()
 Target.create "Clean" (fun _ -> !! "nugets" |> Shell.cleanDirs)
@@ -41,7 +41,7 @@ Target.create "PackNugets" (fun _ ->
             (fun opts ->
                 { opts with
                     Configuration = DotNet.BuildConfiguration.Release
-                    OutputPath = Some $"./{output}/{project}" })
+                    OutputPath = Some $"./{output}" })
 
             $"src/{project}"))
 
