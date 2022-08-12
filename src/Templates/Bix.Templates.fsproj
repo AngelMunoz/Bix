@@ -15,7 +15,7 @@
     <!-- NuGet config -->
     <PackageType>Template</PackageType>
     <PackageId>Bix.Templates</PackageId>
-    <PackageVersion>1.0.0-beta-002</PackageVersion>
+    <PackageVersion>1.0.0-beta-003</PackageVersion>
     <PackageTags>bix;web;app;dotnet;new;template;F#;fable;deno;bun;cloudflare;worker</PackageTags>
   </PropertyGroup>
 
