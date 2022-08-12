@@ -16,6 +16,6 @@
     "language": "F#",
     "type": "project"
   },
-  "sourceName": "Worker",
+  "sourceName": "AppName",
   "preferNameDirectory": "true"
 }
