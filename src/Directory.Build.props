@@ -22,12 +22,12 @@
         <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0" PrivateAssets="All" />
     </ItemGroup>
     <PropertyGroup>
-        <FableBrowserBlob>1.2.0</FableBrowserBlob>
-        <FableBrowserWebSocket>1.2.0</FableBrowserWebSocket>
+        <FableBrowserBlob>1.3.0</FableBrowserBlob>
+        <FableBrowserWebSocket>1.3.0</FableBrowserWebSocket>
         <FableBrowserEvent>1.5.0</FableBrowserEvent>
-        <FableBrowserUrl>1.1.0</FableBrowserUrl>
+        <FableBrowserUrl>1.3.2</FableBrowserUrl>
         <FableFetch>2.6.0</FableFetch>
-        <FableCore>3.7.1</FableCore>
+        <FableCore>4.0.0</FableCore>
         <FableURLPattern>1.0.0</FableURLPattern>
   </PropertyGroup>
 </Project>
