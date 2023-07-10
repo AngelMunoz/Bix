@@ -9,6 +9,7 @@ open Fable.Core.DynamicExtensions
 open Browser.Types
 open Fetch
 open URLPattern
+open System
 
 type RequestHandler = Request -> U2<Response, JS.Promise<Response>>
 type RequestErrorHandler = exn -> U2<Response, JS.Promise<Response>>
@@ -45,6 +46,31 @@ type IHostServer =
     abstract development: bool
     abstract env: Map<string, string>
 
+type SearchParamValue =
+    | String of value: string option
+    | StringArray of value: string option ResizeArray
+
+    member this.AsString =
+        match this with
+        | String(Some value) -> value
+        | StringArray(values) ->
+            let values =
+                [| for value in values do
+                       let value = defaultArg value String.Empty
+                       if String.IsNullOrWhiteSpace value then () else value |]
+
+            System.String.Join(",", values)
+        | String None -> String.Empty
+
+    member this.Values =
+        match this with
+        | String value ->
+            let r = ResizeArray()
+            r.Add(value)
+            r
+        | StringArray value -> value
+
+
 [<AttachMembers>]
 type HttpContext(server: IHostServer, req: Request, res: Response) =
     let mutable _res = res
@@ -63,35 +89,70 @@ type HttpContext(server: IHostServer, req: Request, res: Response) =
 
     member _.SetPattern(pattern: URLPatternResult option) = patternResult <- pattern
 
-    member _.SearchParams: Map<string, string option> =
+    member _.SearchParams: Map<string, SearchParamValue> =
         match patternResult with
         | Some result ->
-            let strings = (result.search.groups["0"] :?> string).Split("&")
 
-            seq {
-                for kv in strings do
-                    let values = kv.Split("=")
+            let di = System.Collections.Generic.Dictionary<string, SearchParamValue>()
 
-                    match values with
-                    | [| key; value |] -> (key, Some value)
-                    | [| key |] -> (key, None)
-                    | values -> ("__values", Some(System.String.Join(",", values)))
-            }
-            |> Map.ofSeq
+            for param in (result.search.groups["0"] :?> string).Split("&") do
+                let split = param.Split("=")
+                let key = split[0]
+                let hasValue = split.Length = 2
+                let hasMultiple = split.Length > 2
+
+
+                match di.TryGetValue(key) with
+                | true, (StringArray values) ->
+                    if hasMultiple then
+                        let mapped =
+                            split[1..]
+                            |> Array.map (fun value -> if String.IsNullOrWhiteSpace value then None else Some value)
+
+                        values.AddRange(mapped)
+                    else if hasValue && String.IsNullOrWhiteSpace split[1] then
+                        values.Add None
+                    else
+                        values.Add(Some split[1])
+                | true, (String value) ->
+                    if hasMultiple then
+                        let mapped =
+                            split[1..]
+                            |> Array.map (fun value -> if String.IsNullOrWhiteSpace value then None else Some value)
+
+                        let mapped = ResizeArray(mapped)
+                        mapped.Add(value)
+                        di[key] <- StringArray mapped
+                    else if hasValue && String.IsNullOrWhiteSpace split[1] then
+                        let mapped = ResizeArray([| value; None |])
+                        di[key] <- StringArray mapped
+                    else
+                        di[key] <- StringArray(ResizeArray([| value; Some split[1] |]))
+
+                | false, _ ->
+                    if hasMultiple then
+                        let mapped =
+                            split[1..]
+                            |> Array.map (fun value -> if String.IsNullOrWhiteSpace value then None else Some value)
+
+                        let mapped = ResizeArray(mapped)
+                        di.Add(key, StringArray mapped)
+                    else if hasValue && String.IsNullOrWhiteSpace split[1] then
+                        di.Add(key, String None)
+                    else
+                        di.Add(key, String(Some split[1]))
+
+            di |> Seq.map (fun kv -> kv.Key, kv.Value) |> Map.ofSeq
         | None -> Map.empty
 
     member _.PathParams(index: string) : string option =
         match patternResult with
-        | Some result ->
-            result.pathname.groups.Item index :?> string
-            |> Option.ofObj
+        | Some result -> result.pathname.groups.Item index :?> string |> Option.ofObj
         | None -> None
 
     member _.HashParams(index: string) : string option =
         match patternResult with
-        | Some result ->
-            result.hash.groups.Item index :?> string
-            |> Option.ofObj
+        | Some result -> result.hash.groups.Item index :?> string |> Option.ofObj
         | None -> None
 
     member this.AnyParams(index: string) : string option =
@@ -99,7 +160,7 @@ type HttpContext(server: IHostServer, req: Request, res: Response) =
         |> Option.orElseWith (fun _ ->
             this.SearchParams
             |> Map.tryFind index
-            |> Option.flatten)
+            |> Option.map (fun value -> value.AsString))
         |> Option.orElseWith (fun _ -> this.HashParams index)
 
 

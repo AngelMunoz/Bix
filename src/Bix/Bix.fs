@@ -73,7 +73,6 @@ let inline withErrorHandler (errHandler: RequestErrorHandler) (args: ResizeArray
 let patternOptions (baseUrl: string, route: RouteDefinition) =
     unbox<URLPatternInput>
         {| pathname = route.pattern
-           baseURL = baseUrl
            search = "*"
            hash = "*" |}
 
@@ -81,27 +80,21 @@ let getRouteMatch (ctx: HttpContext, baseUrl: string, notFound: HttpHandler, rou
 
     let routes =
         routes
-        |> List.filter (fun route ->
-            URLPattern(patternOptions (baseUrl, route))
-                .test (unbox ctx.Request.url))
+        |> List.filter (fun route -> URLPattern(patternOptions (baseUrl, route)).test (unbox ctx.Request.url))
 
     if routes.Length > 1 then
         routes
-        |> List.tryFind (fun r ->
-            r.method = All
-            || r.method.asString = ctx.Request.method)
+        |> List.tryFind (fun r -> r.method = All || r.method.asString = ctx.Request.method)
         |> Option.map (fun r -> Found r)
         |> Option.orElse (Some MethodNotAllowed)
     else
         routes
-        |> List.tryFind (fun r ->
-            r.method = All
-            || r.method.asString = ctx.Request.method)
+        |> List.tryFind (fun r -> r.method = All || r.method.asString = ctx.Request.method)
         |> Option.map (fun r -> Found r)
         |> Option.orElse (Some NotFound)
 
     |> function
-        | Some (Found route) ->
+        | Some(Found route) ->
             let pattern = URLPattern(patternOptions (baseUrl, route))
             pattern.exec (!!ctx.Request.url) |> ctx.SetPattern
             route.handler (fun _ -> Promise.lift None) ctx
@@ -113,8 +106,7 @@ let handleRouteMatch (ctx: HttpContext) (bixResponse: JS.Promise<BixResponse opt
     let status = ctx.Response.Status
 
     let contentType =
-        ctx.Response.Headers.ContentType
-        |> Option.defaultValue "text/plain"
+        ctx.Response.Headers.ContentType |> Option.defaultValue "text/plain"
 
     let options = [ Status status ]
 
@@ -129,10 +121,10 @@ let handleRouteMatch (ctx: HttpContext) (bixResponse: JS.Promise<BixResponse opt
                 | Text value -> BixResponse.OnText(value, options)
                 | Html value -> BixResponse.OnHtml(value, options)
                 | Json value -> BixResponse.OnJson(value, options)
-                | JsonOptions (value, encoder) -> BixResponse.OnJsonOptions(value, encoder, options)
-                | Blob (content, mimeType) -> BixResponse.OnBlob(content, mimeType, options)
-                | ArrayBufferView (content, mimeType) -> BixResponse.OnArrayBufferView(content, mimeType, options)
-                | ArrayBuffer (content, mimeType) -> BixResponse.OnArrayBuffer(content, mimeType, options)
-                | BixResponse.Custom (content, args) ->
+                | JsonOptions(value, encoder) -> BixResponse.OnJsonOptions(value, encoder, options)
+                | Blob(content, mimeType) -> BixResponse.OnBlob(content, mimeType, options)
+                | ArrayBufferView(content, mimeType) -> BixResponse.OnArrayBufferView(content, mimeType, options)
+                | ArrayBuffer(content, mimeType) -> BixResponse.OnArrayBuffer(content, mimeType, options)
+                | BixResponse.Custom(content, args) ->
                     BixResponse.OnCustom(content, contentType, Status status :: options @ args)
     }
