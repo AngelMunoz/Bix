@@ -94,55 +94,60 @@ type HttpContext(server: IHostServer, req: Request, res: Response) =
         | Some result ->
 
             let di = System.Collections.Generic.Dictionary<string, SearchParamValue>()
+            let searchStr = (result.search.groups["0"] :?> string)
 
-            for param in (result.search.groups["0"] :?> string).Split("&") do
-                let split = param.Split("=")
-                let key = split[0]
-                let hasValue = split.Length = 2
-                let hasMultiple = split.Length > 2
+            if String.IsNullOrWhiteSpace searchStr then
+                Map.empty
+            else
+
+                for param in searchStr.Split("&") do
+                    let split = param.Split("=")
+                    let key = split[0]
+                    let hasValue = split.Length = 2
+                    let hasMultiple = split.Length > 2
 
 
-                match di.TryGetValue(key) with
-                | true, (StringArray values) ->
-                    if hasMultiple then
-                        let mapped =
-                            split[1..]
-                            |> Array.map (fun value -> if String.IsNullOrWhiteSpace value then None else Some value)
+                    match di.TryGetValue(key) with
+                    | true, (StringArray values) ->
+                        if hasMultiple then
+                            let mapped =
+                                split[1..]
+                                |> Array.map (fun value -> if String.IsNullOrWhiteSpace value then None else Some value)
 
-                        values.AddRange(mapped)
-                    else if hasValue && String.IsNullOrWhiteSpace split[1] then
-                        values.Add None
-                    else
-                        values.Add(Some split[1])
-                | true, (String value) ->
-                    if hasMultiple then
-                        let mapped =
-                            split[1..]
-                            |> Array.map (fun value -> if String.IsNullOrWhiteSpace value then None else Some value)
+                            values.AddRange(mapped)
+                        else if hasValue && String.IsNullOrWhiteSpace split[1] then
+                            values.Add None
+                        else
+                            values.Add(Some split[1])
+                    | true, (String value) ->
+                        if hasMultiple then
+                            let mapped =
+                                split[1..]
+                                |> Array.map (fun value -> if String.IsNullOrWhiteSpace value then None else Some value)
 
-                        let mapped = ResizeArray(mapped)
-                        mapped.Add(value)
-                        di[key] <- StringArray mapped
-                    else if hasValue && String.IsNullOrWhiteSpace split[1] then
-                        let mapped = ResizeArray([| value; None |])
-                        di[key] <- StringArray mapped
-                    else
-                        di[key] <- StringArray(ResizeArray([| value; Some split[1] |]))
+                            let mapped = ResizeArray(mapped)
+                            mapped.Add(value)
+                            di[key] <- StringArray mapped
+                        else if hasValue && String.IsNullOrWhiteSpace split[1] then
+                            let mapped = ResizeArray([| value; None |])
+                            di[key] <- StringArray mapped
+                        else
+                            di[key] <- StringArray(ResizeArray([| value; Some split[1] |]))
 
-                | false, _ ->
-                    if hasMultiple then
-                        let mapped =
-                            split[1..]
-                            |> Array.map (fun value -> if String.IsNullOrWhiteSpace value then None else Some value)
+                    | false, _ ->
+                        if hasMultiple then
+                            let mapped =
+                                split[1..]
+                                |> Array.map (fun value -> if String.IsNullOrWhiteSpace value then None else Some value)
 
-                        let mapped = ResizeArray(mapped)
-                        di.Add(key, StringArray mapped)
-                    else if hasValue && String.IsNullOrWhiteSpace split[1] then
-                        di.Add(key, String None)
-                    else
-                        di.Add(key, String(Some split[1]))
+                            let mapped = ResizeArray(mapped)
+                            di.Add(key, StringArray mapped)
+                        else if hasValue && String.IsNullOrWhiteSpace split[1] then
+                            di.Add(key, String None)
+                        else
+                            di.Add(key, String(Some split[1]))
 
-            di |> Seq.map (fun kv -> kv.Key, kv.Value) |> Map.ofSeq
+                di |> Seq.map (fun kv -> kv.Key, kv.Value) |> Map.ofSeq
         | None -> Map.empty
 
     member _.PathParams(index: string) : string option =
