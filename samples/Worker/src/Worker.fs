@@ -1,4 +1,6 @@
-﻿open Bix
+﻿module Worker
+
+open Bix
 open Bix.Router
 open Bix.Types
 open Bix.Handlers
