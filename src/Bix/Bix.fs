@@ -103,15 +103,12 @@ let getRouteMatch (ctx: HttpContext, baseUrl: string, notFound: HttpHandler, rou
         | Some NotFound -> notFound (fun _ -> Promise.lift None) ctx
 
 let handleRouteMatch (ctx: HttpContext) (bixResponse: JS.Promise<BixResponse option>) : JS.Promise<Response> =
-    let status = ctx.Response.Status
-
-    let contentType =
-        ctx.Response.Headers.ContentType |> Option.defaultValue "text/plain"
-
-    let options = [ Status status ]
-
     promise {
         let! response = bixResponse
+        let contentType =
+            ctx.Response.Headers.ContentType |> Option.defaultValue "text/plain"
+        let status = ctx.Response.Status
+        let options = [ Status status ]
 
         return
             match response with
